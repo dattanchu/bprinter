@@ -2,11 +2,12 @@
 #define BPRINTER_TABLE_PRINTER_H_
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <string>
 
 namespace bprinter {
-class NextLineSymbol{};
+class endl{};
 /** \class TablePrinter
 
   Print a pretty table into your output of choice.
@@ -36,10 +37,35 @@ public:
   void set_separator(const std::string & separator);
 
   void AddColumn(const std::string & header_name, int column_width);
-  NextLineSymbol SkipToNextLine();
+  endl SkipToNextLine();
   void PrintHeader();
   void PrintFooter();
-  template<typename T> TablePrinter operator<<(T input);
+
+  TablePrinter& operator<<(endl input){
+    while (j_ != 0){
+      *this << "";
+    }
+    return *this;
+  }
+
+  template<typename T> TablePrinter& operator<<(T input){
+    if (j_ == 0)
+      *out_stream_ << "|";
+
+    *out_stream_ << std::setw(column_widths_.at(j_)) << input;
+
+    if (j_ == get_num_columns()-1){
+      *out_stream_ << "|\n";
+      i_ = i_ + 1;
+      j_ = 0;
+    } else {
+      *out_stream_ << separator_;
+      j_ = j_ + 1;
+    }
+
+    return *this;
+  }
+
 private:
   void PrintHorizontalLine();
   std::ostream * out_stream_;

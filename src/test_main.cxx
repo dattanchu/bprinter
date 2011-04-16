@@ -9,7 +9,7 @@ int main(int argc, char** argv){
   tp.PrintHeader();
   tp << "Dat Chu" << 25 << "Research Assistant";
   tp << "John Doe" << 26 << "Professional Anonymity";
-  tp << "Jane Doe" << tp.SkipToNextLine();
+  tp << "Jane Doe" << bprinter::endl();
   tp << "Tom Doe" << 7 << "Student";
   tp.PrintFooter();
   return 1;
