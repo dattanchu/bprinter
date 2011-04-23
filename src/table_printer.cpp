@@ -1,5 +1,7 @@
 #include "bprinter/table_printer.h"
+#include <stdexcept>
 #include <iomanip>
+#include <stdexcept>
 
 namespace bprinter {
 TablePrinter::TablePrinter(std::ostream * output, const std::string & separator){
@@ -26,10 +28,19 @@ void TablePrinter::set_separator(const std::string &separator){
   separator_ = separator;
 }
 
+/** \brief Add a column to our table
+ ** 
+ ** \param header_name Name to be print for the header
+ ** \param column_width the width of the column (has to be >=5)
+ ** */
 void TablePrinter::AddColumn(const std::string & header_name, int column_width){
+  if (column_width < 4){
+    throw std::invalid_argument("Column size has to be >= 4");
+  }
+
   column_headers_.push_back(header_name);
   column_widths_.push_back(column_width);
-  table_width_ += column_width + separator_.size(); // for the separator
+  table_width_ += column_width + separator_.size(); // for the separator  
 }
 
 void TablePrinter::PrintHorizontalLine() {
@@ -47,7 +58,7 @@ void TablePrinter::PrintHeader(){
   *out_stream_ << "|";
 
   for (int i=0; i<get_num_columns(); ++i){
-    *out_stream_ << std::setw(column_widths_.at(i)) << column_headers_.at(i);
+    *out_stream_ << std::setw(column_widths_.at(i)) << column_headers_.at(i).substr(0, column_widths_.at(i));
     if (i != get_num_columns()-1){
       *out_stream_ << separator_;
     }
@@ -59,6 +70,16 @@ void TablePrinter::PrintHeader(){
 
 void TablePrinter::PrintFooter(){
   PrintHorizontalLine();
+}
+
+TablePrinter& TablePrinter::operator<<(float input){
+  OutputDecimalNumber<float>(input);
+  return *this;
+}
+
+TablePrinter& TablePrinter::operator<<(double input){
+  OutputDecimalNumber<double>(input);
+  return *this;
 }
 
 }
