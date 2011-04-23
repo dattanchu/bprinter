@@ -1,6 +1,12 @@
 #include "bprinter/table_printer.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+
+#if defined(USE_BOOST_KARMA)
+#include <boost/spirit/include/karma.hpp>
+namespace karma = boost::spirit::karma;
+#endif
+
 using bprinter::TablePrinter;
 int main(int argc, char** argv){
   TablePrinter tp(&std::cout);

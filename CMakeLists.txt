@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(bprinter)
 
 # Boost Karma (part of Boost Spirir) has ability to handle output
-option(USE_BOOST_KARMA "Use Boost Karma for output instead of doing it ourselves?" OFF)
+option(USE_BOOST_KARMA "Use Boost Karma for output instead of doing it ourselves?" ON)
 if(USE_BOOST_KARMA)
   find_package(Boost)
   if (Boost_FOUND)
