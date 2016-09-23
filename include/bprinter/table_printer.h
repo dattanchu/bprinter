@@ -60,7 +60,9 @@ public:
       *out_stream_ << "|";
 
     if(flush_left_)
-	*out_stream_ << std::left;
+      *out_stream_ << std::left;
+    else
+      *out_stream_ << std::right; 
 
     // Leave 3 extra space: One for negative sign, one for zero, one for decimal
     *out_stream_ << std::setw(column_widths_.at(j_))
