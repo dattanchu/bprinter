@@ -10,6 +10,7 @@ TablePrinter::TablePrinter(std::ostream * output, const std::string & separator)
   j_ = 0;
   separator_ = separator;
   table_width_ = 0;
+  flush_left_ = false;
 }
 
 TablePrinter::~TablePrinter(){
@@ -26,6 +27,14 @@ int TablePrinter::get_table_width() const {
 
 void TablePrinter::set_separator(const std::string &separator){
   separator_ = separator;
+}
+
+void TablePrinter::set_flush_left(){
+  flush_left_ = true;
+}
+
+void TablePrinter::set_flush_right(){
+  flush_left_ = false;
 }
 
 /** \brief Add a column to our table
@@ -58,6 +67,12 @@ void TablePrinter::PrintHeader(){
   *out_stream_ << "|";
 
   for (int i=0; i<get_num_columns(); ++i){
+
+    if(flush_left_)
+      *out_stream_ << std::left;
+    else
+      *out_stream_ << std::right; 
+
     *out_stream_ << std::setw(column_widths_.at(i)) << column_headers_.at(i).substr(0, column_widths_.at(i));
     if (i != get_num_columns()-1){
       *out_stream_ << separator_;
