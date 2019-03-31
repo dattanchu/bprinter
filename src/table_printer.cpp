@@ -48,26 +48,35 @@ void TablePrinter::AddColumn(const std::string & header_name, int column_width){
 
 void TablePrinter::PrintHorizontalLine() {
   *out_stream_ << "+"; // the left bar
-
-  for (int i=0; i<table_width_-1; ++i)
-    *out_stream_ << "-";
-
+  for (int i=0; i < table_width_-1; ++i) {
+      *out_stream_ << "-";
+  }
   *out_stream_ << "+" << std::endl; // the right bar
 }
 
 void TablePrinter::PrintHeader(){
   PrintHorizontalLine();
   *out_stream_ << "|";
+    if(alignment_ == LEFT) {
+        *out_stream_ << std::left;
+    }
+    else if (alignment_ == RIGHT) {
+        *out_stream_ << std::right;
+    }
 
-  for (int i=0; i<get_num_columns(); ++i){
 
-    if(true)
-      *out_stream_ << std::left;
-    else
-      *out_stream_ << std::right;
+  for (int column = 0; column < get_num_columns(); ++column) {
+      const int column_width = column_widths_.at(column);
+      const std::string column_header = column_headers_.at(column);
+      *out_stream_ << std::setw(column_width);
 
-    *out_stream_ << std::setw(column_widths_.at(i)) << column_headers_.at(i).substr(0, column_widths_.at(i));
-    if (i != get_num_columns()-1){
+      if (alignment_ == CENTER) {
+          *out_stream_ << padString(column_header, column_width);
+      } else {
+          *out_stream_ << column_header;
+      }
+
+    if (column != get_num_columns()-1) {
       *out_stream_ << separator_;
     }
   }
