@@ -8,6 +8,18 @@
 #include <sstream>
 #include <cmath>
 
+/*TODO:
+
+refactor member names
+refactor function names
+add documentation
+add align center
+add padding
+add super header
+turn SSTR to function, or embed it inline
+*/
+
+
 #define SSTR( x ) static_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 
