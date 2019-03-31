@@ -6,11 +6,11 @@
 namespace bprinter {
 TablePrinter::TablePrinter(std::ostream * output, const std::string & separator){
   out_stream_ = output;
-  i_ = 0;
-  j_ = 0;
+  current_row_index_ = 0;
+  current_column_index_ = 0;
   separator_ = separator;
   table_width_ = 0;
-  flush_left_ = false;
+  alignment_ = CENTER;
 }
 
 TablePrinter::~TablePrinter(){
@@ -29,13 +29,7 @@ void TablePrinter::set_separator(const std::string &separator){
   separator_ = separator;
 }
 
-void TablePrinter::set_flush_left(){
-  flush_left_ = true;
-}
 
-void TablePrinter::set_flush_right(){
-  flush_left_ = false;
-}
 
 /** \brief Add a column to our table
  ** 
@@ -58,8 +52,7 @@ void TablePrinter::PrintHorizontalLine() {
   for (int i=0; i<table_width_-1; ++i)
     *out_stream_ << "-";
 
-  *out_stream_ << "+"; // the right bar
-  *out_stream_ << "\n";
+  *out_stream_ << "+" << std::endl; // the right bar
 }
 
 void TablePrinter::PrintHeader(){
@@ -68,10 +61,10 @@ void TablePrinter::PrintHeader(){
 
   for (int i=0; i<get_num_columns(); ++i){
 
-    if(flush_left_)
+    if(true)
       *out_stream_ << std::left;
     else
-      *out_stream_ << std::right; 
+      *out_stream_ << std::right;
 
     *out_stream_ << std::setw(column_widths_.at(i)) << column_headers_.at(i).substr(0, column_widths_.at(i));
     if (i != get_num_columns()-1){
@@ -96,5 +89,6 @@ TablePrinter& TablePrinter::operator<<(double input){
   OutputDecimalNumber<double>(input);
   return *this;
 }
+
 
 }
