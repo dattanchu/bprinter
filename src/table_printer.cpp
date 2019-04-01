@@ -6,17 +6,18 @@
 namespace bprinter {
 
     TablePrinter::TablePrinter() {
-        initialize(&std::cout, "|");
+        initialize("|");
     }
 
-    TablePrinter::TablePrinter(std::ostream * output, const std::string & separator){
-        initialize(output, separator);
+    TablePrinter::TablePrinter(const std::string & separator){
+        initialize(separator);
     }
 
-    void TablePrinter::initialize(std::ostream * output, const std::string & separator) {
-        out_stream_ = output;
-        separator_ = separator;
+    void TablePrinter::initialize(const std::string & separator) {
+        column_headers_.reserve(5);
+        merged_column_headers_.reserve(2);
         alignLeft();
+        separator_ = separator;
         table_width_ = 0;
         padding_ = 0;
         current_row_index_ = 0;
@@ -58,38 +59,82 @@ namespace bprinter {
         table_width_ += column_width + separator_.size();
     }
 
-    void TablePrinter::printHorizontalLine() {
-        *out_stream_ << "+"; // the left bar
-        for (int i=0; i < table_width_-1; ++i) {
-            *out_stream_ << "-";
-        }
-        *out_stream_ << "+" << std::endl; // the right bar
+    void TablePrinter::addMergedColumn(const std::string &header_name) {
+        merged_column_headers_.push_back(header_name);
     }
 
-    void TablePrinter::printHeader(){
-        printHorizontalLine();
-        *out_stream_ << "|";
-        if(alignment_ == LEFT) {
-            *out_stream_ << std::left;
-        } else if (alignment_ == RIGHT) {
-            *out_stream_ << std::right;
+    void TablePrinter::addHorizontalLineToStream(std::stringstream & stream) {
+        stream << "+"; // the left bar
+        for (int i = 0; i < (table_width_ - 1); ++i) {
+            stream << "-";
         }
+        stream << "+" << std::endl; // the right bar
+    }
+
+    void TablePrinter::addAlignmentToStream(std::stringstream & stream) {
+        if(alignment_ == LEFT) {
+            stream << std::left;
+        } else if (alignment_ == RIGHT) {
+            stream << std::right;
+        }
+    }
+
+    void TablePrinter::addHeaderToStream(std::stringstream & stream){
+        addAlignmentToStream(stream);
+        addHorizontalLineToStream(stream);
+        stream << "|";
+
+        // print merged headers
+//        for (int merged_header = 0; merged_header < merged_column_headers_.size(); ++merged_header) {
+//            const int column_width = column_widths_.at(column);
+//            const std::string column_header = column_headers_.at(column);
+//            const std::string padded_header = padBoundedString(column_header, column_width, padding_);
+//            stream_ << std::setw(column_width);
+//            if (alignment_ == CENTER) {
+//                stream << alignBoundedStringToCenter(padded_header, column_width);
+//            } else {
+//                stream << padded_header;
+//            }
+//            if (column != getNumColumns()-1) {
+//                stream << separator_;
+//            }
+//        }
+        // print columns header
         for (int column = 0; column < getNumColumns(); ++column) {
             const int column_width = column_widths_.at(column);
             const std::string column_header = column_headers_.at(column);
             const std::string padded_header = padBoundedString(column_header, column_width, padding_);
-            *out_stream_ << std::setw(column_width);
+            stream << std::setw(column_width);
             if (alignment_ == CENTER) {
-                *out_stream_ << alignBoundedStringToCenter(padded_header, column_width);
+                stream << alignBoundedStringToCenter(padded_header, column_width);
             } else {
-                *out_stream_ << padded_header;
+                stream << padded_header;
             }
             if (column != getNumColumns()-1) {
-                *out_stream_ << separator_;
+                stream << separator_;
             }
         }
-        *out_stream_ << "|\n";
-        printHorizontalLine();
+        stream << "|\n";
+        addHorizontalLineToStream(stream);
+    }
+
+    std::string TablePrinter::generateTable() {
+        if (column_headers_.size() < 1) {
+            return "";
+        }
+        std::stringstream stream;
+
+        //build header
+        addHeaderToStream(stream);
+        // build body
+        stream << data_stream_.str();
+        // build footer
+        addHorizontalLineToStream(stream);
+        return stream.str();
+    }
+
+    void TablePrinter::print() {
+        printf("%s", generateTable().c_str());
     }
 
     TablePrinter& TablePrinter::operator<<(blank input){
@@ -99,9 +144,7 @@ namespace bprinter {
         return *this;
     }
 
-    void TablePrinter::printFooter(){
-        printHorizontalLine();
-    }
+
 
     TablePrinter& TablePrinter::operator<<(float input){
         printBoundedDecimal<float>(input);
