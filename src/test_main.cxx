@@ -10,8 +10,8 @@ namespace karma = boost::spirit::karma;
 using bprinter::TablePrinter;
 int main(int argc, char** argv){
     TablePrinter tp(&std::cout);
-    tp.alignRight();
-    tp.setPadding(2);
+    tp.alignCenter();
+    //tp.setPadding(2);
     tp.addColumn("Name", 25);
     tp.addColumn("Age", 5);
     tp.addColumn("Position", 30);

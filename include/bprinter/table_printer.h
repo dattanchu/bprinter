@@ -10,8 +10,6 @@
 
 /*TODO:
 
-add padding
- apply centring and padding to decimals
 add super header
 turn SSTR to function, or embed it inline
  test different text and col widths
@@ -98,44 +96,39 @@ namespace bprinter {
 
         void printHorizontalLine();
 
-        template<typename T> void printBoundedDecimal(T input){
-            // If we cannot handle this number, indicate so
-            if (input < 10*(column_widths_.at(current_column_index_)-1) || input > 10*column_widths_.at(current_column_index_)){
+        template<typename T> void printBoundedDecimal(T input) {
+            const int column_width = column_widths_.at(current_column_index_);
+            if (input < 10 * (column_width-1) || input > 10 * column_width){
                 std::stringstream string_out;
                 string_out << std::setiosflags(std::ios::fixed)
-                           << std::setprecision(column_widths_.at(current_column_index_))
-                           << std::setw(column_widths_.at(current_column_index_))
+                           << std::setprecision(column_width)
+                           << std::setw(column_width)
                            << input;
-
                 std::string string_rep_of_number = string_out.str();
-
-                string_rep_of_number[column_widths_.at(current_column_index_)-1] = '*';
-                std::string string_to_print = string_rep_of_number.substr(0, column_widths_.at(current_column_index_));
+                string_rep_of_number[column_width - 1] = '*';
+                std::string string_to_print = string_rep_of_number.substr(0, column_width);
                 *out_stream_ << string_to_print;
             } else {
-
                 // determine what precision we need
-                int precision = column_widths_.at(current_column_index_) - 1; // leave room for the decimal point
-                if (input < 0)
+                int precision = column_width - 1; // leave room for the decimal point
+                if (input < 0) {
                     --precision; // leave room for the minus sign
-
-                // leave room for digits before the decimal?
+                }
+                // leave room for digits before the decimal
                 if (input < -1 || input > 1){
                     int num_digits_before_decimal = 1 + (int)log10(std::abs(input));
                     precision -= num_digits_before_decimal;
+                } else {
+                    precision--; // e.g. 0.12345 or -0.1234
                 }
-                else
-                    precision --; // e.g. 0.12345 or -0.1234
-
-                if (precision < 0)
+                if (precision < 0) {
                     precision = 0; // don't go negative with precision
-
+                }
                 *out_stream_ << std::setiosflags(std::ios::fixed)
                              << std::setprecision(precision)
-                             << std::setw(column_widths_.at(current_column_index_))
+                             << std::setw(column_width)
                              << input;
             }
-
             if (current_column_index_ == getNumColumns()-1){
                 *out_stream_ << "|\n";
                 current_row_index_ = current_row_index_ + 1;
