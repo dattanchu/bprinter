@@ -76,7 +76,7 @@ namespace bprinter {
          *  calling this function
          *  \return string output of the table
         */
-        std::string getTableOutput() { return data_stream_.str().c_str(); }
+        std::string getTableOutput() { return generateTable(); }
 
         TablePrinter& operator<<(blank input);
         TablePrinter& operator<<(float input);
