@@ -10,7 +10,6 @@
 
 /*TODO:
 
-add super header
 turn SSTR to function, or embed it inline
  test different text and col widths
  test printing struct

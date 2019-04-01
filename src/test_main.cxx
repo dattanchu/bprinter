@@ -16,8 +16,8 @@ int main(int argc, char** argv){
     tp.addColumn("Age", 5);
     tp.addColumn("Position", 30);
     tp.addColumn("Allowance", 9);
-    tp.addMergedColumn("This is merged column1");
-    tp.addMergedColumn("This is merged column2");
+    //tp.addMergedColumn("This is merged column1");
+    //tp.addMergedColumn("This is merged column2");
 
 
     tp << "Dat Chu" << 25 << "Research Assistant" << -0.00000000001337;

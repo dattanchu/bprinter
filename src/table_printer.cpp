@@ -82,10 +82,11 @@ namespace bprinter {
     void TablePrinter::addHeaderToStream(std::stringstream & stream){
         addAlignmentToStream(stream);
         addHorizontalLineToStream(stream);
-        stream << "|";
+
 
         // add merged headers
         for (int header_idx = 0; header_idx < merged_column_headers_.size(); ++header_idx) {
+            stream << "|";
             const std::string header = merged_column_headers_.at(header_idx);
             const int column_width = table_width_-1;
             const std::string padded_header = padBoundedString(header, column_width, padding_);
@@ -93,10 +94,9 @@ namespace bprinter {
             stream << alignBoundedStringToCenter(padded_header, column_width);
             stream << "|\n";
             addHorizontalLineToStream(stream);
-            if (header_idx == merged_column_headers_.size() - 1) {
-                stream << "|";
-            }
         }
+
+        stream << "|";
         // add columns header
         for (int column = 0; column < getNumColumns(); ++column) {
             const int column_width = column_widths_.at(column);
