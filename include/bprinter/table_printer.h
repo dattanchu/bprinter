@@ -9,10 +9,6 @@
 #include <cmath>
 
 /*TODO:
-
- add cutoff to long strings like floats and doubles does
- change types
- add table style - horizonal line for each line or just header
  add functions documentation
  update readme file with examples and documentation
 */
@@ -37,6 +33,8 @@ namespace bprinter {
         void alignRight() { alignment_ = RIGHT; }
         void alignCenter() { alignment_ = CENTER; }
         void setPadding(int padding) { padding_ = padding; }
+        void setDashedRawsStyle() { style_ = DASHED; };
+        void setStandartStyle() { style_ = STANDARD; };
         void print();
         std::string getTableOutput() { return data_stream_.str().c_str(); }
 
@@ -60,6 +58,9 @@ namespace bprinter {
             }
             if (current_column_index_ == getNumColumns()-1){
                 data_stream_  << "|\n";
+                if (style_ == DASHED) {
+                    addHorizontalLineToStream(data_stream_);
+                }
                 current_row_index_ = current_row_index_ + 1;
                 current_column_index_ = 0;
             } else {
@@ -75,6 +76,11 @@ namespace bprinter {
             LEFT = 0,
             RIGHT,
             CENTER
+        };
+
+        enum Style {
+            STANDARD = 0,
+            DASHED
         };
 
         void initialize(const std::string & separator);
@@ -134,11 +140,18 @@ namespace bprinter {
             }
             if (current_column_index_ == getNumColumns()-1){
                 data_stream_  << "|\n";
+                if (style_ == DASHED) {
+                    addHorizontalLineToStream(data_stream_);
+                }
                 current_row_index_ = current_row_index_ + 1;
                 current_column_index_ = 0;
             } else {
                 data_stream_  << separator_;
                 current_column_index_ = current_column_index_ + 1;
+            }
+            if (style_ == DASHED) {
+                //data_stream_ << "|\n";
+                //addHorizontalLineToStream(data_stream_);
             }
         }
 
@@ -154,6 +167,7 @@ namespace bprinter {
         int table_width_;
         int padding_;
         Alignment alignment_;
+        Style style_;
     };
 
 }

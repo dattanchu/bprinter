@@ -17,6 +17,7 @@ namespace bprinter {
         column_headers_.reserve(5);
         merged_column_headers_.reserve(2);
         alignLeft();
+        setStandartStyle();
         separator_ = separator;
         table_width_ = 0;
         padding_ = 0;
@@ -127,6 +128,9 @@ namespace bprinter {
         }
         stream << "|\n";
         addHorizontalLineToStream(stream);
+        if (style_ == DASHED) {
+            addHorizontalLineToStream(stream);
+        }
     }
 
     std::string TablePrinter::generateTable() {
@@ -140,7 +144,9 @@ namespace bprinter {
         // build body
         stream << data_stream_.str();
         // build footer
-        addHorizontalLineToStream(stream);
+        if (style_ != DASHED) {
+            addHorizontalLineToStream(stream);
+        }
         return stream.str();
     }
 

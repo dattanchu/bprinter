@@ -7,9 +7,10 @@ using bprinter::TablePrinter;
 int main(int argc, char** argv){
     TablePrinter tp;
     tp.alignLeft();
+    //tp.setDashedRawsStyle();
     //tp.setPadding(2);
     tp.addColumn("Name", 25);
-    tp.addColumn("Age", 25);
+    tp.addColumn("Age", 6);
     tp.addColumn("Position", 30);
     tp.addColumn("Allowance", 9);
     //tp.addMergedColumn("This is merged column1");
