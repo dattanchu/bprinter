@@ -8,7 +8,7 @@ include_directories(include/bprinter)
 
 add_executable(bprinter
         .idea/bprinter.iml
-        .idea/encodings.xml
+        #.idea/encodings.xml
         .idea/misc.xml
         .idea/modules.xml
         .idea/vcs.xml

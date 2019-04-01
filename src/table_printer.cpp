@@ -56,11 +56,6 @@ namespace bprinter {
         return std::string(left_padding, ' ') + str + std::string(right_padding, ' ');
     }
 
-    /** \brief Add a column to our table
-     **
-     ** \param header_name Name to be print for the header
-     ** \param column_width the width of the column (has to be >=5)
-     ** */
     void TablePrinter::addColumn(const std::string &header_name, int column_width){
         if (header_name.length() < 1) {
             return;
@@ -96,7 +91,6 @@ namespace bprinter {
     void TablePrinter::addHeaderToStream(std::stringstream & stream){
         addAlignmentToStream(stream);
         addHorizontalLineToStream(stream);
-
 
         // add merged headers
         for (int header_idx = 0; header_idx < merged_column_headers_.size(); ++header_idx) {
@@ -162,12 +156,14 @@ namespace bprinter {
     }
 
     TablePrinter& TablePrinter::operator<<(float input){
-        printBoundedDecimal<float>(input);
+        std::string bounded_decimal_str = boundDecimalNumber<float>(input);
+        data_stream_ << bounded_decimal_str;
         return *this;
     }
 
     TablePrinter& TablePrinter::operator<<(double input){
-        printBoundedDecimal<double>(input);
+        std::string bounded_decimal_str = boundDecimalNumber<double>(input);
+        data_stream_ << bounded_decimal_str;
         return *this;
     }
 

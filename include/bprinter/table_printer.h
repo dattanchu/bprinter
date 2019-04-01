@@ -8,11 +8,6 @@
 #include <sstream>
 #include <cmath>
 
-/*TODO:
- add functions documentation
- update readme file with examples and documentation
-*/
-
 namespace bprinter {
 
     class blank{};
@@ -25,17 +20,62 @@ namespace bprinter {
         TablePrinter(const std::string & separator);
 
         int getNumColumns() const { return column_headers_.size(); }
+
         int getTableWidth() const { return table_width_; }
+
+        /// \brief Set columns seperator
         void setSeperator(const std::string &separator) { separator_ = separator; }
+
+        /** \brief Add a column with header to the table
+        **
+        ** \param header_name Name to be print for the header
+        ** \param column_width the width of the column
+        ** */
         void addColumn(const std::string &header_name, int column_width);
+
+        /** \brief Add a merged column with header to the table.
+        **  Merged column is a title column with the same width as
+         *  the whole table width. It is usually useful for printing
+         *  the table name
+        ** \param header_name Name to be print for the header
+        ** \param column_width the width of the column
+        ** */
         void addMergedColumn(const std::string &header_name);
+
+        /// \brief Align the text in the table to the left
         void alignLeft() { alignment_ = LEFT; }
+
+        /// \brief Align the text in the table to the right
         void alignRight() { alignment_ = RIGHT; }
+
+        /// \brief Align the text in the table to the center
         void alignCenter() { alignment_ = CENTER; }
+
+        /** \brief Set padding around text where there is enough room
+        ** \param padding How much white spaces pad with on each side
+         * of the text
+        ** */
         void setPadding(int padding) { padding_ = padding; }
+
+        /** \brief Print dashed line after each table row to seperate
+         *  between rows
+         */
         void setDashedRawsStyle() { style_ = DASHED; };
+
+        /** \brief Print lines one after another without separating
+         *  dashed lines
+         */
         void setStandartStyle() { style_ = STANDARD; };
+
+        /** \brief Print the table. Set table text and settings before
+        *   calling this function
+        */
         void print();
+
+        /** \brief Get the table output as string. Set table text and settings before
+         *  calling this function
+         *  \return string output of the table
+        */
         std::string getTableOutput() { return data_stream_.str().c_str(); }
 
         TablePrinter& operator<<(blank input);
@@ -94,18 +134,25 @@ namespace bprinter {
 
         std::string generateTable();
 
+        /// \brief align string to center within the limits of bounded width
         std::string alignBoundedStringToCenter(const std::string &str, int width);
 
+        /// \brief pad string within the limits of bounded width
         std::string padBoundedString(const std::string &str, int width, int padding);
 
+        /// \brief enforce width limits on a string
         std::string boundString(const std::string &str, int width);
 
+        /// \brief add dashed line (raw separator) to stream
         void addHorizontalLineToStream(std::stringstream & stream);
 
+        /// \brief apply chosen alignment direction to stream
         void addAlignmentToStream(std::stringstream & stream);
 
-        template<typename T> void printBoundedDecimal(T input) {
-            addAlignmentToStream(data_stream_);
+        /// \brief enforce width limits on a decimal point number (float or double)
+        template<typename T> std::string boundDecimalNumber(T input) {
+            std::stringstream result_str;
+            addAlignmentToStream(result_str);
             const int column_width = column_widths_.at(current_column_index_);
             if (input < 10 * (column_width-1) || input > 10 * column_width){
                 std::stringstream string_out;
@@ -116,7 +163,7 @@ namespace bprinter {
                 std::string string_rep_of_number = string_out.str();
                 string_rep_of_number[column_width - 1] = '*';
                 std::string string_to_print = string_rep_of_number.substr(0, column_width);
-                data_stream_ << string_to_print;
+                result_str << string_to_print;
             } else {
                 // determine what precision we need
                 int precision = column_width - 1; // leave room for the decimal point
@@ -133,26 +180,24 @@ namespace bprinter {
                 if (precision < 0) {
                     precision = 0; // don't go negative with precision
                 }
-                data_stream_  << std::setiosflags(std::ios::fixed)
+                result_str  << std::setiosflags(std::ios::fixed)
                              << std::setprecision(precision)
                              << std::setw(column_width)
                              << input;
             }
             if (current_column_index_ == getNumColumns()-1){
-                data_stream_  << "|\n";
+                result_str  << "|\n";
                 if (style_ == DASHED) {
-                    addHorizontalLineToStream(data_stream_);
+                    addHorizontalLineToStream(result_str);
                 }
                 current_row_index_ = current_row_index_ + 1;
                 current_column_index_ = 0;
             } else {
-                data_stream_  << separator_;
+                result_str  << separator_;
                 current_column_index_ = current_column_index_ + 1;
             }
-            if (style_ == DASHED) {
-                //data_stream_ << "|\n";
-                //addHorizontalLineToStream(data_stream_);
-            }
+
+            return result_str.str();
         }
 
         std::vector<std::string> column_headers_;
