@@ -10,19 +10,12 @@
 
 /*TODO:
 
-turn SSTR to function, or embed it inline
- test different text and col widths
- test printing struct
  add cutoff to long strings like floats and doubles does
  change types
  add table style - horizonal line for each line or just header
  add functions documentation
  update readme file with examples and documentation
 */
-
-
-#define SSTR( x ) static_cast< std::ostringstream & >( \
-        ( std::ostringstream() << std::dec << x ) ).str()
 
 namespace bprinter {
 
@@ -56,7 +49,9 @@ namespace bprinter {
                 data_stream_  << "|";
             }
             const int column_width = column_widths_.at(current_column_index_);
-            const std::string padded_str = padBoundedString(SSTR(input), column_width, padding_);
+            const std::string input_str = TablePrinter::typeToString(input);
+            const std::string bounded_str = boundString(input_str, column_width);
+            const std::string padded_str = padBoundedString(bounded_str, column_width, padding_);
             data_stream_  << std::setw(column_width);
             if (alignment_ == CENTER) {
                 data_stream_  << alignBoundedStringToCenter(padded_str, column_width);
@@ -85,11 +80,19 @@ namespace bprinter {
         void initialize(const std::string & separator);
         void addHeaderToStream(std::stringstream & stream);
 
+        template<typename T> static std::string typeToString(T input) {
+            std::ostringstream stream;
+            stream << std::dec << input;
+            return stream.str();
+        }
+
         std::string generateTable();
 
         std::string alignBoundedStringToCenter(const std::string &str, int width);
 
         std::string padBoundedString(const std::string &str, int width, int padding);
+
+        std::string boundString(const std::string &str, int width);
 
         void addHorizontalLineToStream(std::stringstream & stream);
 

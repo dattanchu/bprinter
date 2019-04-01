@@ -35,6 +35,16 @@ namespace bprinter {
         return std::string((available_space+1)/2, ' ') + str + std::string(available_space/2, ' ');
     }
 
+    std::string TablePrinter::boundString(const std::string &str, int width) {
+        if (width >= str.length()){
+            return str;
+        }
+        int space_to_cut = str.length() - width;
+        std::string bounded_str = str.substr(0, str.length()-space_to_cut-1); //cut space, and leave place for astrix
+        bounded_str += "*";
+        return bounded_str;
+    }
+
     std::string TablePrinter::alignBoundedStringToCenter(const std::string &str, int width) {
         if (width <= str.length()) {
             return str;
@@ -51,8 +61,11 @@ namespace bprinter {
      ** \param column_width the width of the column (has to be >=5)
      ** */
     void TablePrinter::addColumn(const std::string &header_name, int column_width){
-        if (column_width < 4){
-            throw std::invalid_argument("Column size has to be >= 4");
+        if (header_name.length() < 1) {
+            return;
+        }
+        if (column_width < header_name.length()){
+            column_width = header_name.length();
         }
         column_headers_.push_back(header_name);
         column_widths_.push_back(column_width);
@@ -141,8 +154,6 @@ namespace bprinter {
         }
         return *this;
     }
-
-
 
     TablePrinter& TablePrinter::operator<<(float input){
         printBoundedDecimal<float>(input);
