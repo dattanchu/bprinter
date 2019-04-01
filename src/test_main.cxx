@@ -6,15 +6,15 @@
 using bprinter::TablePrinter;
 int main(int argc, char** argv){
     TablePrinter tp;
-    tp.alignLeft();
-    //tp.setDashedRawsStyle();
-    //tp.setPadding(2);
+//    tp.alignCenter();
+//    tp.setDashedRawsStyle();
+//    tp.setPadding(1);
     tp.addColumn("Name", 25);
     tp.addColumn("Age", 6);
-    tp.addColumn("Position", 30);
-    tp.addColumn("Allowance", 9);
-    //tp.addMergedColumn("This is merged column1");
-    //tp.addMergedColumn("This is merged column2");
+    tp.addColumn("Position", 10);
+    tp.addColumn("Allowance", 9); //NOTICE how the long words in this column are trimmed
+//    tp.addMergedColumn("This is merged column1");
+//    tp.addMergedColumn("This is merged column2");
 
     tp << "Dat Chu" << 25 << "Research Assistant" << -0.00000000001337;
     tp << "John Doe" << 26 << "Too much float" << 125456789.123456789;
