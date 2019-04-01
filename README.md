@@ -2,7 +2,7 @@
 Usage is pretty straigh forwared. For commented API see header file.
 
 Here is the simplest usage example:
-```
+```cpp
 #include "bprinter/table_printer.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -55,7 +55,7 @@ Output:
 ```
 
 Here is a more advanced usage example:
-```
+```cpp
 #include "bprinter/table_printer.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
