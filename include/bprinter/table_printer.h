@@ -49,8 +49,6 @@ namespace bprinter {
         std::string getTableOutput() { return data_stream_.str().c_str(); }
 
         TablePrinter& operator<<(blank input);
-
-        // Can we merge these?
         TablePrinter& operator<<(float input);
         TablePrinter& operator<<(double input);
         template<typename T> TablePrinter& operator<<(T input){

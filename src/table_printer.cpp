@@ -84,22 +84,20 @@ namespace bprinter {
         addHorizontalLineToStream(stream);
         stream << "|";
 
-        // print merged headers
-//        for (int merged_header = 0; merged_header < merged_column_headers_.size(); ++merged_header) {
-//            const int column_width = column_widths_.at(column);
-//            const std::string column_header = column_headers_.at(column);
-//            const std::string padded_header = padBoundedString(column_header, column_width, padding_);
-//            stream_ << std::setw(column_width);
-//            if (alignment_ == CENTER) {
-//                stream << alignBoundedStringToCenter(padded_header, column_width);
-//            } else {
-//                stream << padded_header;
-//            }
-//            if (column != getNumColumns()-1) {
-//                stream << separator_;
-//            }
-//        }
-        // print columns header
+        // add merged headers
+        for (int header_idx = 0; header_idx < merged_column_headers_.size(); ++header_idx) {
+            const std::string header = merged_column_headers_.at(header_idx);
+            const int column_width = table_width_-1;
+            const std::string padded_header = padBoundedString(header, column_width, padding_);
+            stream << std::setw(column_width);
+            stream << alignBoundedStringToCenter(padded_header, column_width);
+            stream << "|\n";
+            addHorizontalLineToStream(stream);
+            if (header_idx == merged_column_headers_.size() - 1) {
+                stream << "|";
+            }
+        }
+        // add columns header
         for (int column = 0; column < getNumColumns(); ++column) {
             const int column_width = column_widths_.at(column);
             const std::string column_header = column_headers_.at(column);
