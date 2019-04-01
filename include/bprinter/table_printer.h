@@ -10,10 +10,8 @@
 
 /*TODO:
 
-refactor function names
-add documentation
-add align center
 add padding
+ apply centring and padding to decimals
 add super header
 turn SSTR to function, or embed it inline
  test different text and col widths
@@ -21,6 +19,7 @@ turn SSTR to function, or embed it inline
  add cutoff to long strings like floats and doubles does
  change types
  add table style - horizonal line for each line or just header
+ add functions documentation
  update readme file with examples and documentation
 */
 
@@ -32,7 +31,7 @@ namespace bprinter {
 
     class blank{};
 
-    class TablePrinter{
+    class TablePrinter {
 
     public:
 
@@ -48,6 +47,7 @@ namespace bprinter {
         void alignLeft() { alignment_ = LEFT; }
         void alignRight() { alignment_ = RIGHT; }
         void alignCenter() { alignment_ = CENTER; }
+        void setPadding(int padding) { padding_ = padding; }
 
         TablePrinter& operator<<(blank input);
 
@@ -64,11 +64,12 @@ namespace bprinter {
                 *out_stream_ << std::right;
             }
             const int column_width = column_widths_.at(current_column_index_);
+            const std::string padded_str = padBoundedString(SSTR(input), column_width, padding_);
             *out_stream_ << std::setw(column_width);
             if (alignment_ == CENTER) {
-                *out_stream_ << alignBoundedStringToCenter(SSTR(input), column_width);
+                *out_stream_ << alignBoundedStringToCenter(padded_str, column_width);
             } else {
-                *out_stream_ << input;
+                *out_stream_ << padded_str;
             }
             if (current_column_index_ == getNumColumns()-1){
                 *out_stream_ << "|\n";
@@ -93,8 +94,6 @@ namespace bprinter {
 
         std::string alignBoundedStringToCenter(const std::string &str, int width);
 
-        //padding is side padding
-        //TODO: use this for padding
         std::string padBoundedString(const std::string &str, int width, int padding);
 
         void printHorizontalLine();
@@ -156,6 +155,7 @@ namespace bprinter {
         int current_column_index_;
 
         int table_width_;
+        int padding_;
         Alignment alignment_;
     };
 

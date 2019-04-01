@@ -18,6 +18,7 @@ namespace bprinter {
         separator_ = separator;
         alignLeft();
         table_width_ = 0;
+        padding_ = 0;
         current_row_index_ = 0;
         current_column_index_ = 0;
     }
@@ -76,11 +77,12 @@ namespace bprinter {
         for (int column = 0; column < getNumColumns(); ++column) {
             const int column_width = column_widths_.at(column);
             const std::string column_header = column_headers_.at(column);
+            const std::string padded_header = padBoundedString(column_header, column_width, padding_);
             *out_stream_ << std::setw(column_width);
             if (alignment_ == CENTER) {
-                *out_stream_ << alignBoundedStringToCenter(column_header, column_width);
+                *out_stream_ << alignBoundedStringToCenter(padded_header, column_width);
             } else {
-                *out_stream_ << column_header;
+                *out_stream_ << padded_header;
             }
             if (column != getNumColumns()-1) {
                 *out_stream_ << separator_;
