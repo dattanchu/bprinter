@@ -2,7 +2,7 @@
 Usage is pretty straigh forwared. For commented API see header file.
 
 Here is the simplest usage example:
-'''
+```
 #include "bprinter/table_printer.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -32,10 +32,10 @@ int main(int argc, char** argv){
 
     return 1;
 }
-'''
+```
 
 Output:
-'''
+```
 +-------------------------------------------------------------------------+
 |Name                     |Age   |Position                      |Allowance|
 +-------------------------------------------------------------------------+
@@ -51,10 +51,11 @@ Output:
 |Jane Doe                 |      |                              |         |
 |Tom Doe                  |7     |Student                       |-3.14159*|
 +-------------------------------------------------------------------------+
-'''
+
+```
 
 Here is a more advanced usage example:
-'''
+```
 #include "bprinter/table_printer.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -88,10 +89,10 @@ int main(int argc, char** argv){
 
     return 1;
 }
-'''
+```
 
 Output:
-'''
+```
 +-----------------------------------------------------+
 |                This is merged column1               |
 +-----------------------------------------------------+
@@ -122,7 +123,7 @@ Output:
 +-----------------------------------------------------+
 |         Tom Doe         |   7  |  Student |-3.14159*|
 +-----------------------------------------------------+
-'''
+```
 
 ## Be in touch
 Bug fixes, comments and requests are welcomed at https://github.com/dattanchu/bprinter
