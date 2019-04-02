@@ -11,6 +11,22 @@ namespace tprinter {
 
     class blank{};
 
+    class precision {
+
+    };
+
+    /** \brief Convert integral value to hex representation
+    ** \param value: Integral values
+     * \return Hex string representation of the integral
+    ** */
+    template<typename integral_t>
+    static std::string intToHex(integral_t value)
+    {
+        std::stringstream stream;
+        stream << std::showbase << std::hex << value;
+        return stream.str();
+    }
+
     class TablePrinter {
 
     public:
@@ -82,7 +98,8 @@ namespace tprinter {
         TablePrinter& operator<<(blank input);
         TablePrinter& operator<<(float input);
         TablePrinter& operator<<(double input);
-        template<typename T> TablePrinter& operator<<(T input){
+
+        template<typename T> TablePrinter& operator<<(T input) {
             addAlignmentToStream(data_stream_);
             if (current_column_index_ == 0) {
                 data_stream_  << "|";
