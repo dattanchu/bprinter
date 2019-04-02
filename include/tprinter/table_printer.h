@@ -8,7 +8,7 @@
 #include <sstream>
 #include <cmath>
 
-namespace bprinter {
+namespace tprinter {
 
     class blank{};
 

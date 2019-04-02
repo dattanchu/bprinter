@@ -1,9 +1,6 @@
-#include "bprinter/table_printer.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "tprinter/table_printer.h"
 
-
-using bprinter::TablePrinter;
+using tprinter::TablePrinter;
 int main(int argc, char** argv){
     TablePrinter tp;
 //    tp.alignCenter();
@@ -25,8 +22,8 @@ int main(int argc, char** argv){
     tp << "John Doe" << 26 << "Exact size int" << -12545678;
     tp << "John Doe" << 26 << "Exact size float" << -1254567.8;
     tp << "John Doe" << 26 << "Negative Int" << -1254;
-    tp << "Jane Doe" << bprinter::blank();
-    tp << "Tom Doe" << 7 << "Student" << -M_PI;
+    tp << "Jane Doe" << tprinter::blank();
+    tp << "Tom Doe" << 7 << "Student" << -3.14159265359;
 
     tp.print();
 

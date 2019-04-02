@@ -1,9 +1,9 @@
-#include "bprinter/table_printer.h"
+#include "tprinter/table_printer.h"
 #include <stdexcept>
 #include <iomanip>
 #include <stdexcept>
 
-namespace bprinter {
+namespace tprinter {
 
     TablePrinter::TablePrinter() {
         initialize("|");
