@@ -1,7 +1,6 @@
 #ifndef BPRINTER_TABLE_PRINTER_H_
 #define BPRINTER_TABLE_PRINTER_H_
 
-#include <iostream>
 #include <iomanip>
 #include <vector>
 #include <string>
