@@ -18,7 +18,9 @@ namespace tprinter {
         merged_column_headers_.reserve(2);
         alignLeft();
         setStandartStyle();
+        useFixedPointsNotation();
         separator_ = separator;
+        floating_point_precision_ = 2;
         table_width_ = 0;
         padding_ = 0;
         current_row_index_ = 0;
@@ -164,16 +166,13 @@ namespace tprinter {
     }
 
     TablePrinter& TablePrinter::operator<<(float input){
-        std::string bounded_decimal_str = boundDecimalNumber<float>(input);
-        data_stream_ << bounded_decimal_str;
+        addFloatingPointToStream(input);
         return *this;
     }
 
     TablePrinter& TablePrinter::operator<<(double input){
-        std::string bounded_decimal_str = boundDecimalNumber<double>(input);
-        data_stream_ << bounded_decimal_str;
+        addFloatingPointToStream(input);
         return *this;
     }
-
 
 }

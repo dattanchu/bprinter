@@ -11,10 +11,6 @@ namespace tprinter {
 
     class blank{};
 
-    class precision {
-
-    };
-
     /** \brief Convert integral value to hex representation
     ** \param value: Integral values
      * \return Hex string representation of the integral
@@ -37,6 +33,19 @@ namespace tprinter {
         int getNumColumns() const { return column_headers_.size(); }
 
         int getTableWidth() const { return table_width_; }
+
+        /// \brief Set the number of digits to print after decimal point
+        void setFloatingPointPrecision(int precision) { floating_point_precision_ = precision; }
+
+        /** \brief Sets the floatfield format flag for the str stream to fixed.
+         *  e.g. 125456789.12346 will be presented as 125456789.12346
+         */
+        void useFixedPointsNotation() { fixed_points_notation_ = true;}
+
+        /** \brief Sets the floatfield format flag for the str stream to fixed.
+         *  e.g. 125456789.12346 will be presented as 1.2546e+08
+         */
+        void dontUseFixedPointsNotation() { fixed_points_notation_ = false;}
 
         /// \brief Set columns seperator
         void setSeperator(const std::string &separator) { separator_ = separator; }
@@ -108,7 +117,7 @@ namespace tprinter {
             const std::string input_str = TablePrinter::typeToString(input);
             const std::string bounded_str = boundString(input_str, column_width);
             const std::string padded_str = padBoundedString(bounded_str, column_width, padding_);
-            data_stream_  << std::setw(column_width);
+            data_stream_  << std::setw(column_width) << std::fixed << std::setprecision(7);
             if (alignment_ == CENTER) {
                 data_stream_  << alignBoundedStringToCenter(padded_str, column_width);
             } else {
@@ -150,6 +159,16 @@ namespace tprinter {
             return stream.str();
         }
 
+        template <typename floating_point_t>
+        void addFloatingPointToStream(floating_point_t input) {
+            std::stringstream float_stream;
+            if (fixed_points_notation_) {
+                float_stream << std::fixed;
+            }
+            float_stream << std::setprecision(floating_point_precision_) << input;
+            this->operator<<(float_stream.str());
+        }
+
         std::string generateTable();
 
         /// \brief align string to center within the limits of bounded width
@@ -167,57 +186,6 @@ namespace tprinter {
         /// \brief apply chosen alignment direction to stream
         void addAlignmentToStream(std::stringstream & stream);
 
-        /// \brief enforce width limits on a decimal point number (float or double)
-        template<typename T> std::string boundDecimalNumber(T input) {
-            std::stringstream result_str;
-            addAlignmentToStream(result_str);
-            const int column_width = column_widths_.at(current_column_index_);
-            if (input < 10 * (column_width-1) || input > 10 * column_width){
-                std::stringstream string_out;
-                string_out << std::setiosflags(std::ios::fixed)
-                           << std::setprecision(column_width)
-                           << std::setw(column_width)
-                           << input;
-                std::string string_rep_of_number = string_out.str();
-                string_rep_of_number[column_width - 1] = '*';
-                std::string string_to_print = string_rep_of_number.substr(0, column_width);
-                result_str << string_to_print;
-            } else {
-                // determine what precision we need
-                int precision = column_width - 1; // leave room for the decimal point
-                if (input < 0) {
-                    --precision; // leave room for the minus sign
-                }
-                // leave room for digits before the decimal
-                if (input < -1 || input > 1){
-                    int num_digits_before_decimal = 1 + (int)log10(std::abs(input));
-                    precision -= num_digits_before_decimal;
-                } else {
-                    precision--; // e.g. 0.12345 or -0.1234
-                }
-                if (precision < 0) {
-                    precision = 0; // don't go negative with precision
-                }
-                result_str  << std::setiosflags(std::ios::fixed)
-                             << std::setprecision(precision)
-                             << std::setw(column_width)
-                             << input;
-            }
-            if (current_column_index_ == getNumColumns()-1){
-                result_str  << "|\n";
-                if (style_ == DASHED_ROWS_SEPARATION) {
-                    addHorizontalLineToStream(result_str);
-                }
-                current_row_index_ = current_row_index_ + 1;
-                current_column_index_ = 0;
-            } else {
-                result_str  << separator_;
-                current_column_index_ = current_column_index_ + 1;
-            }
-
-            return result_str.str();
-        }
-
         std::vector<std::string> column_headers_;
         std::vector<std::string> merged_column_headers_;
         std::vector<int> column_widths_;
@@ -226,9 +194,10 @@ namespace tprinter {
 
         int current_row_index_;
         int current_column_index_;
-
         int table_width_;
         int padding_;
+        int floating_point_precision_;
+        bool fixed_points_notation_;
         Alignment alignment_;
         Style style_;
     };
