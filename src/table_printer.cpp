@@ -122,7 +122,7 @@ namespace tprinter {
         }
         stream << "|\n";
         addHorizontalLineToStream(stream);
-        if (style_ == DASHED) {
+        if (style_ == DASHED_ROWS_SEPARATION) {
             addHorizontalLineToStream(stream);
         }
     }
@@ -138,7 +138,7 @@ namespace tprinter {
         // build body
         stream << data_stream_.str();
         // build footer
-        if (style_ != DASHED) {
+        if (style_ != DASHED_ROWS_SEPARATION) {
             addHorizontalLineToStream(stream);
         }
         return stream.str();

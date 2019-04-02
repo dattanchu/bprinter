@@ -60,12 +60,12 @@ namespace tprinter {
         /** \brief Print dashed line after each table row to seperate
          *  between rows
          */
-        void setDashedRawsStyle() { style_ = DASHED; };
+        void setDashedRawsStyle() { style_ = DASHED_ROWS_SEPARATION; };
 
         /** \brief Print lines one after another without separating
          *  dashed lines
          */
-        void setStandartStyle() { style_ = STANDARD; };
+        void setStandartStyle() { style_ = NO_ROWS_SEPARATION; };
 
         /** \brief Print the table. Set table text and settings before
         *   calling this function
@@ -98,7 +98,7 @@ namespace tprinter {
             }
             if (current_column_index_ == getNumColumns()-1){
                 data_stream_  << "|\n";
-                if (style_ == DASHED) {
+                if (style_ == DASHED_ROWS_SEPARATION) {
                     addHorizontalLineToStream(data_stream_);
                 }
                 current_row_index_ = current_row_index_ + 1;
@@ -119,8 +119,8 @@ namespace tprinter {
         };
 
         enum Style {
-            STANDARD = 0,
-            DASHED
+            NO_ROWS_SEPARATION = 0,
+            DASHED_ROWS_SEPARATION
         };
 
         void initialize(const std::string & separator);
@@ -187,7 +187,7 @@ namespace tprinter {
             }
             if (current_column_index_ == getNumColumns()-1){
                 result_str  << "|\n";
-                if (style_ == DASHED) {
+                if (style_ == DASHED_ROWS_SEPARATION) {
                     addHorizontalLineToStream(result_str);
                 }
                 current_row_index_ = current_row_index_ + 1;
