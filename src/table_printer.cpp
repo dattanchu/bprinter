@@ -25,6 +25,14 @@ namespace tprinter {
         current_column_index_ = 0;
     }
 
+    void TablePrinter::reset() {
+        data_stream_.str("");
+        data_stream_.clear();
+        column_headers_.clear();
+        merged_column_headers_.clear();
+        initialize(separator_);
+    }
+
     std::string TablePrinter::padBoundedString(const std::string &str, int width, int padding) {
         if (width <= str.length()){
             return str;

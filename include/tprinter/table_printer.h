@@ -77,6 +77,8 @@ namespace tprinter {
         */
         std::string getTableOutput() { return generateTable(); }
 
+        void reset();
+
         TablePrinter& operator<<(blank input);
         TablePrinter& operator<<(float input);
         TablePrinter& operator<<(double input);
