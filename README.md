@@ -121,5 +121,4 @@ Output:
 +-----------------------------------------------------+
 ```
 
-## Be in touch
-Bug fixes, comments and requests are welcomed at https://github.com/dattanchu/tpritner
+
